@@ -8,7 +8,7 @@ import {
 import { signJwt, verifyJwt } from "../utils/jwt.utils";
 import config from "config";
 import { get } from "lodash";
-import sessionModel from "../models/session.model";
+import SessionModel from "../models/session.model";
 
 export async function createSessionHandler(req: Request, res: Response) {
   // Validate the user's password
@@ -65,8 +65,7 @@ export async function reIssueAccessToken({
 
   if (!decoded || !get(decoded, "session")) return false;
 
-  const session = await sessionModel.findById(get(decoded, "session"));
-  console.log("session", session);
+  const session = await SessionModel.findById(get(decoded, "session"));
 
   if (!session || !session.valid) return false;
 

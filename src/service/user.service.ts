@@ -1,14 +1,14 @@
 import { omit } from "lodash";
-import userModel, { userDocument } from "../models/user.model";
+import UserModel, { UserDocument } from "../models/user.model";
 import { FilterQuery, ObtainDocumentType } from "mongoose";
 
 export async function createUser(
   input: ObtainDocumentType<
-    Omit<userDocument, "createdAt" | "updateAt" | "comparePassowd">
+    Omit<UserDocument, "createdAt" | "updateAt" | "comparePassowd">
   >
 ) {
   try {
-    const user = await userModel.create(input);
+    const user = await UserModel.create(input);
     return omit(user.toJSON(), "password");
   } catch (e: any) {
     throw new Error(e);
@@ -22,7 +22,7 @@ export async function validatePassword({
   email: string;
   password: string;
 }) {
-  const user = await userModel.findOne({ email });
+  const user = await UserModel.findOne({ email });
 
   if (!user) {
     return false;
@@ -37,6 +37,6 @@ export async function validatePassword({
   return omit(user.toJSON(), "password");
 }
 
-export async function findUser(query: FilterQuery<userDocument>) {
-  return userModel.findOne(query).lean();
+export async function findUser(query: FilterQuery<UserDocument>) {
+  return UserModel.findOne(query).lean();
 }
