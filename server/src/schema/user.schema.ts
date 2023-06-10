@@ -4,7 +4,7 @@ export const createUserSchema = object({
   body: object({
     email: string({
       required_error: "Email is required",
-    }).email("Not a valide email"),
+    }).email("Not a valid email"),
     name: string({
       required_error: "Name is required",
     }),
