@@ -1,13 +1,13 @@
-"use client";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const createUserSchema = z
   .object({
-    username: z.string().nonempty({ message: "Username is required" }),
+    name: z.string().nonempty({ message: "Name is required" }),
     email: z
       .string()
       .nonempty({ message: "Email is required" })
@@ -16,19 +16,20 @@ const createUserSchema = z
       .string()
       .nonempty({ message: "Password is required" })
       .min(6, "Password to short -should be 6 chars minimum"),
-    confirmPassword: z
+    passwordConfirmation: z
       .string()
       .nonempty({ message: "Confirm password is required" }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
-    path: ["confirmPassword"],
+    path: ["passwordConfirmation"],
   });
 
 type CreateUserInput = z.infer<typeof createUserSchema>;
 
 export default function Register() {
   const [registerError, setRegisterError] = useState(null);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -43,6 +44,7 @@ export default function Register() {
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/users`,
         data
       );
+      router.push("/");
     } catch (e: any) {
       setRegisterError(e.message);
     }
@@ -64,20 +66,20 @@ export default function Register() {
               >
                 <div>
                   <label
-                    htmlFor="username"
+                    htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900"
                   >
-                    Your username
+                    Your Name
                   </label>
                   <input
                     type="text"
-                    id="username"
+                    id="name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
-                    placeholder="Your name"
-                    {...register("username")}
+                    placeholder="Your Name"
+                    {...register("name")}
                   />
                   <span className="text-red-800 text-sm block mt-2">
-                    {errors.username?.message}
+                    {errors.name?.message}
                   </span>
                 </div>
                 <div>
@@ -128,10 +130,10 @@ export default function Register() {
                     id="confirmPassword"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5"
                     placeholder="••••••••"
-                    {...register("confirmPassword")}
+                    {...register("passwordConfirmation")}
                   />
                   <span className="text-red-800 text-sm block mt-2">
-                    {errors.confirmPassword?.message}
+                    {errors.passwordConfirmation?.message}
                   </span>
                 </div>
                 <button
