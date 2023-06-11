@@ -1,6 +1,6 @@
 import { omit } from "lodash";
 import UserModel, { UserDocument, UserInput } from "../models/user.model";
-import { FilterQuery, ObtainDocumentType } from "mongoose";
+import { FilterQuery } from "mongoose";
 
 export async function createUser(input: UserInput) {
   try {
